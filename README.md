@@ -1,16 +1,23 @@
 # Sudoku Board Component
 
-This is an Angular component that implements a fully functional Sudoku game with validation, different difficulty levels, and a responsive UI.
+An Angular standalone component implementing a 9×9 Sudoku board with validation, varying difficulty levels, and responsive UI.
 
 ## Features
 
-- 9x9 Sudoku grid implemented using Angular Reactive Forms
-- Input validation for numbers 1-9 only
-- Visual feedback for invalid cells
-- Multiple difficulty levels (Easy, Medium, Hard)
-- Check button to validate the current board state
-- Reset button to clear the board
-- Responsive design for various screen sizes
+- **9×9 Grid** using Angular Reactive Forms (nested `FormArray`)
+- **Cell Validation**:
+  - Only accepts numbers 1–9 (via `sudokuRangeValidator`)
+  - Checks for duplicate values in rows, columns, and 3×3 boxes
+  - Marks invalid cells with a distinct error state
+- **Difficulty Levels**:
+  - _Easy, Medium, Hard_ buttons fill a random number of valid cells
+  - Pre-filled cells are marked readonly
+- **User Actions**:
+  - **Check**: Validates the entire board for any Sudoku rule violations
+  - **Reset**: Clears all user-editable cells
+- **Responsive Layout**:
+  - Clean design using CSS Grid
+  - Clear borders to delineate 3×3 subgrids
 
 ## Component Structure
 
@@ -21,23 +28,22 @@ This is an Angular component that implements a fully functional Sudoku game with
 
 ## Key Implementation Details
 
-### Form Structure
-- Uses nested FormArrays to represent the 9x9 grid
-- Each cell is a FormControl with min/max validators
+1. **Form Construction**  
+   - A `FormArray` of 9 rows, each containing a `FormArray` of 9 `FormControl`s.  
+   - Each cell has `sudokuRangeValidator` to ensure values remain in `[1..9]`.
 
-### Validation Logic
-- Validates rows, columns, and 3x3 subgrids
-- Highlights invalid cells with a red background
-- Marks all occurrences of duplicate values as invalid
+2. **Validation**  
+   - `validateSudoku()` checks each non-readonly cell for duplicates in the corresponding row, column, and 3×3 region.  
+   - If duplicates are found, the component sets an `invalid` error on those cells.  
+   - Existing errors like `outOfRange` are preserved.
 
-### Game Generation
-- Generates a valid, complete Sudoku solution using backtracking
-- Creates puzzles of varying difficulty by removing a specific number of cells
+3. **Random Fill**  
+   - `fillRandomGrid(count)` randomly places valid numbers (1–9) into `count` cells without violating Sudoku constraints (no duplicates in row/column/subgrid).  
+   - Any pre-filled cell becomes readonly to prevent editing.
 
-### UI/UX
-- Clean, responsive design
-- Clear borders to distinguish 3x3 subgrids (2px borders as requested)
-- Intuitive button layout and styling
+4. **Reset Behavior**  
+   - `resetBoard()` clears all values in non-readonly cells and removes the `invalid` errors.  
+   - Readonly cells remain unchanged.
 
 ## Development Notes
 
