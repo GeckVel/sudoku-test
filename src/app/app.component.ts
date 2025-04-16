@@ -1,15 +1,19 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { SudokuBoardComponent } from "./sudoku-board/sudoku-board.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, SudokuBoardComponent],
-  templateUrl: './app.component.html',
+  imports: [CommonModule, RouterOutlet],
+  template: `
+    <div>
+      <h1>{{ title }}</h1>
+      <router-outlet></router-outlet>
+    </div>
+  `,
   styles: []
 })
 export class AppComponent {
-  title = 'sudoku-test';
+  title = 'sudoku game';
 }
