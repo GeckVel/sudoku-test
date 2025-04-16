@@ -11,6 +11,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Va
 })
 export class SudokuBoardComponent {
   boardForm!: FormGroup;
+  readonlyCells: boolean[][] = Array(9).fill(null).map(() => Array(9).fill(false));
 
   constructor(private fb: FormBuilder) { }
 
@@ -32,6 +33,26 @@ export class SudokuBoardComponent {
     return (this.board.at(row) as FormArray).at(col) as FormControl;
   }
 
+  fillRandomGrid(count: number): void {
+    this.resetBoard();
+    let filled = 0;
+
+    while (filled < count) {
+      const row = Math.floor(Math.random() * 9);
+      const col = Math.floor(Math.random() * 9);
+      const control = this.getCellControl(row, col);
+
+      if (!control.value) {
+        const num = Math.floor(Math.random() * 9) + 1;
+        if (this.isValid(this.board.value, row, col, num)) {
+          control.setValue(num);
+          this.readonlyCells[row][col] = true;
+          filled++;
+        }
+      }
+    }
+  }
+
   get board(): FormArray {
     return this.boardForm.get('board') as FormArray;
   }
@@ -47,7 +68,8 @@ export class SudokuBoardComponent {
     for (let i = 0; i < 9; i++) {
       for (let j = 0; j < 9; j++) {
         const num = boardValues[i][j];
-        if (num) {
+        // Only validate user-input cells (non-readonly)
+        if (num && !this.isReadonly(i, j)) {
           if (!this.isValid(boardValues, i, j, num)) {
             this.cell(i).at(j).setErrors({ invalid: true });
           }
@@ -87,5 +109,11 @@ export class SudokuBoardComponent {
   resetBoard(): void {
     this.boardForm.reset();
     this.clearValidation();
+    // Reset the readonly cells array
+    this.readonlyCells = Array(9).fill(null).map(() => Array(9).fill(false));
+  }
+
+  isReadonly(row: number, col: number): boolean {
+    return this.readonlyCells[row][col];
   }
 }

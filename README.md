@@ -1,27 +1,59 @@
-# SudokuTest
+# Sudoku Board Component
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.9.
+This is an Angular component that implements a fully functional Sudoku game with validation, different difficulty levels, and a responsive UI.
 
-## Development server
+## Features
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- 9x9 Sudoku grid implemented using Angular Reactive Forms
+- Input validation for numbers 1-9 only
+- Visual feedback for invalid cells
+- Multiple difficulty levels (Easy, Medium, Hard)
+- Check button to validate the current board state
+- Reset button to clear the board
+- Responsive design for various screen sizes
 
-## Code scaffolding
+## Component Structure
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Files
+- `sudoku-board.component.ts` - Component logic
+- `sudoku-board.component.html` - Template
+- `sudoku-board.component.scss` - Styling
 
-## Build
+## Key Implementation Details
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Form Structure
+- Uses nested FormArrays to represent the 9x9 grid
+- Each cell is a FormControl with min/max validators
 
-## Running unit tests
+### Validation Logic
+- Validates rows, columns, and 3x3 subgrids
+- Highlights invalid cells with a red background
+- Marks all occurrences of duplicate values as invalid
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Game Generation
+- Generates a valid, complete Sudoku solution using backtracking
+- Creates puzzles of varying difficulty by removing a specific number of cells
 
-## Running end-to-end tests
+### UI/UX
+- Clean, responsive design
+- Clear borders to distinguish 3x3 subgrids (2px borders as requested)
+- Intuitive button layout and styling
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## Development Notes
 
-## Further help
+- The component follows Angular best practices for reactive forms
+- The validation logic is efficient and identifies all rule violations
+- The puzzle generation algorithm ensures that all puzzles are solvable
+- CSS styling uses CSS Grid for precise layout control
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## How to Run
+
+```bash
+# Install dependencies
+npm install
+
+# Start the development server
+ng serve
+
+# Navigate to http://localhost:4200/
+```

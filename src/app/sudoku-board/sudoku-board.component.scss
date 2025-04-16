@@ -3,32 +3,61 @@
     flex-direction: column;
     align-items: center;
     gap: 20px;
+    padding: 20px;
+    font-family: Arial, sans-serif;
 
-    .grid {
+    .sudoku-grid {
         display: grid;
+        grid-template-columns: repeat(9, 40px);
         grid-template-rows: repeat(9, 40px);
-        grid-gap: 2px;
+        border: 2px solid #333;
 
-        .row {
-            display: grid;
-            grid-template-columns: repeat(9, 40px);
-            grid-gap: 2px;
+        input {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            font-size: 18px;
+            padding: 0;
+            border: 1px solid #ddd;
+            outline: none;
+            -moz-appearance: textfield;
+            box-sizing: border-box;
 
-            input {
-                width: 100%;
-                height: 100%;
-                text-align: center;
-                font-size: 18px;
-                border: 1px solid #ccc;
+            /* Remove spinner buttons */
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            /* Style borders for 3x3 blocks */
+            &.right-border {
+                border-right: 2px solid #333;
+            }
+
+            &.bottom-border {
+                border-bottom: 2px solid #333;
+            }
+
+            &:focus {
+                background-color: #e7f1ff;
+                border-color: #333;
+            }
+
+            &.invalid {
+                background-color: rgba(255, 0, 0, 0.1);
+                border-color: red;
+            }
+
+            /* Style readonly cells */
+            &.readonly {
+                background-color: #f0f0f0;
+                font-weight: bold;
+                color: #555;
+                cursor: not-allowed;
 
                 &:focus {
-                    outline: none;
-                    border-color: #007bff;
-                }
-
-                &.invalid {
-                    border-color: red;
-                    background-color: rgba(255, 0, 0, 0.1);
+                    background-color: #f0f0f0;
                 }
             }
         }
@@ -36,11 +65,72 @@
 
     .buttons {
         display: flex;
-        gap: 10px;
+        gap: 16px;
+        justify-content: center;
+        width: 100%;
 
-        button {
-            padding: 5px 15px;
+        &__btn {
+            padding: 10px 20px;
             cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            min-width: 80px;
+            text-transform: uppercase;
+
+            &:active {
+                transform: translateY(2px);
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            }
+
+            &--easy {
+                background-color: #4caf50; // Green for easy
+                color: white;
+
+                &:hover {
+                    background-color: #3d8b40;
+                }
+            }
+
+            &--medium {
+                background-color: #ff9800; // Orange for medium
+                color: white;
+
+                &:hover {
+                    background-color: #e68900;
+                }
+            }
+
+            &--hard {
+                background-color: #f44336; // Red for hard
+                color: white;
+
+                &:hover {
+                    background-color: #d32f2f;
+                }
+            }
+
+            &--check {
+                background-color: #2196f3; // Blue for check
+                color: white;
+
+                &:hover {
+                    background-color: #0b7dda;
+                }
+            }
+
+            &--reset {
+                background-color: #757575; // Grey for reset
+                color: white;
+
+                &:hover {
+                    background-color: #616161;
+                }
+            }
         }
     }
 }

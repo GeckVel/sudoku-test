@@ -1,14 +1,36 @@
 <div class="sudoku-container">
+    <div class="buttons">
+        <button class="buttons__btn buttons__btn--easy" (click)="fillRandomGrid(12)">
+            Easy
+        </button>
+        <button class="buttons__btn buttons__btn--medium" (click)="fillRandomGrid(8)">
+            Medium
+        </button>
+        <button class="buttons__btn buttons__btn--hard" (click)="fillRandomGrid(4)">
+            Hard
+        </button>
+    </div>
     <form [formGroup]="boardForm">
-        <div class="grid">
-            <div class="row" *ngFor="let row of board.controls; let i = index">
-                <input type="number" *ngFor="let cell of cell(i).controls; let j = index" [formControl]="getCellControl(i, j)"
-                    [class.invalid]="cell.invalid" min="1" max="9" />
-            </div>
+        <div class="sudoku-grid">
+            <ng-container *ngFor="let row of board.controls; let i = index">
+                <ng-container *ngFor="let cell of cell(i).controls; let j = index">
+                    <input 
+                        type="number" 
+                        [formControl]="getCellControl(i, j)"
+                        [class.invalid]="cell.invalid" 
+                        [class.readonly]="isReadonly(i, j)"
+                        [class.right-border]="j % 3 === 2 && j !== 8"
+                        [class.bottom-border]="i % 3 === 2 && i !== 8"
+                        [readonly]="isReadonly(i, j)"
+                        min="1" 
+                        max="9" 
+                    />
+                </ng-container>
+            </ng-container>
         </div>
     </form>
     <div class="buttons">
-        <button (click)="validateSudoku()">Check</button>
-        <button (click)="resetBoard()">Reset</button>
+        <button class="buttons__btn buttons__btn--check" (click)="validateSudoku()">Check</button>
+        <button class="buttons__btn buttons__btn--reset" (click)="resetBoard()">Reset</button>
     </div>
 </div>
