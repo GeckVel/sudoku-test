@@ -17,7 +17,7 @@
                     <input 
                         type="number" 
                         [formControl]="getCellControl(i, j)"
-                        [class.invalid]="cell.invalid" 
+                        [class.invalid]="getCellControl(i, j).invalid"
                         [class.readonly]="isReadonly(i, j)"
                         [class.right-border]="j % 3 === 2 && j !== 8"
                         [class.bottom-border]="i % 3 === 2 && i !== 8"

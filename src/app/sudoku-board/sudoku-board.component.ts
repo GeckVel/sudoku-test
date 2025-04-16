@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { sudokuRangeValidator } from './utils/sudoku-range.validator';
 
 @Component({
   selector: 'app-sudoku-board',
@@ -21,7 +22,7 @@ export class SudokuBoardComponent {
         Array(9).fill(null).map(() =>
           this.fb.array(
             Array(9).fill(null).map(() =>
-              this.fb.control(null, [Validators.min(1), Validators.max(9)])
+              this.fb.control(null, [sudokuRangeValidator])
             )
           )
         )
@@ -67,12 +68,17 @@ export class SudokuBoardComponent {
 
     for (let i = 0; i < 9; i++) {
       for (let j = 0; j < 9; j++) {
-        const num = boardValues[i][j];
-        // Only validate user-input cells (non-readonly)
-        if (num && !this.isReadonly(i, j)) {
-          if (!this.isValid(boardValues, i, j, num)) {
-            this.cell(i).at(j).setErrors({ invalid: true });
+        const control = this.cell(i).at(j);
+        const num = control.value;
+
+        if (!this.isReadonly(i, j)) {
+          let errors = control.errors || {};
+
+          if (num && !this.isValid(boardValues, i, j, num)) {
+            errors['invalid'] = true;
           }
+
+          control.setErrors(Object.keys(errors).length ? errors : null);
         }
       }
     }
@@ -101,16 +107,35 @@ export class SudokuBoardComponent {
   clearValidation(): void {
     for (let i = 0; i < 9; i++) {
       for (let j = 0; j < 9; j++) {
-        this.cell(i).at(j).setErrors(null);
+        const control = this.cell(i).at(j);
+        const existingErrors = control.errors || {};
+
+        // Remove only the Sudoku 'invalid' error, keep outOfRange if it exists
+        delete existingErrors['invalid'];
+
+        if (Object.keys(existingErrors).length === 0) {
+          // No other errors remain, set to null
+          control.setErrors(null);
+        } else {
+          // Keep the remaining errors (like outOfRange)
+          control.setErrors(existingErrors);
+        }
       }
     }
   }
 
   resetBoard(): void {
-    this.boardForm.reset();
     this.clearValidation();
-    // Reset the readonly cells array
-    this.readonlyCells = Array(9).fill(null).map(() => Array(9).fill(false));
+
+    // Only reset user-editable cells
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++) {
+        if (!this.isReadonly(i, j)) {
+          // Reset only non-readonly cells (user inputs)
+          this.getCellControl(i, j).setValue(null);
+        }
+      }
+    }
   }
 
   isReadonly(row: number, col: number): boolean {
